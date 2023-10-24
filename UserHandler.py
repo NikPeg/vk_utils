@@ -4,8 +4,7 @@ import constants
 
 class UserHandler:
     def __init__(self):
-        self.session = vk.Session()
-        self.vk_api = vk.API(self.session)
+        self.vk_api = vk.API(access_token=constants.TOKEN, v=constants.VK_VERSION)
 
     def get_full_name(self, user_id):
         try:

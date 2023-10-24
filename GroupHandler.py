@@ -5,8 +5,7 @@ import time
 
 class GroupHandler:
     def __init__(self):
-        self.session = vk.Session()
-        self.vk_api = vk.API(self.session)
+        self.vk_api = vk.API(access_token=constants.TOKEN, v=constants.VK_VERSION)
 
     def get_all_users(self, group_id):
         try:
