@@ -1,12 +1,13 @@
 import vk
+from tenacity import retry, wait_exponential, stop_after_attempt
+
 import constants
 import time
 
 
 class GroupHandler:
     def __init__(self):
-        self.session = vk.Session()
-        self.vk_api = vk.API(self.session)
+        self.vk_api = vk.API(access_token=constants.TOKEN, v=constants.VK_VERSION)
 
     def get_all_users(self, group_id):
         try:
@@ -47,6 +48,7 @@ class GroupHandler:
             time.sleep(0.3)
         return res
 
+    @retry(wait=wait_exponential(max=10), stop=stop_after_attempt(10))
     def get_name(self, group_id):
         try:
             group = self.vk_api.groups.getById(group_id=group_id,
@@ -69,5 +71,16 @@ class GroupHandler:
                     file.write(f"{name};https://vk.com/public{group_id}\n")
                 except UnicodeEncodeError:
                     file.write(f"None;https://vk.com/public{group_id}\n")
+                except Exception as e:
+                    print(e)
+
+    def groups_statistics_to_csv(self, groups, filename="groups"):
+        print("groups_statistics_to_csv")
+        with open(f"{filename}.csv", "w") as file:
+            file.write(f"link;subscribers count\n")
+            for group_id, group_info in groups.items():
+                file_line = f"https://vk.com/public{group_id};{group_info}\n"
+                try:
+                    file.write(file_line)
                 except Exception as e:
                     print(e)
