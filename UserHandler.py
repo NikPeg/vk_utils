@@ -1,5 +1,7 @@
 import vk
 import constants
+import time
+import collections
 
 
 class UserHandler:
@@ -31,4 +33,16 @@ class UserHandler:
             print(f"{i}/{len(user_ids)}")
             user_id = user_ids[i]
             res.extend(self.get_all_groups(user_id))
+            time.sleep(0.3)
+        return res
+
+    def bulk_get_groups_statistics(self, user_ids):
+        print("bulk_get_groups_statistics")
+        res = collections.defaultdict(int)
+        for i in range(len(user_ids)):
+            print(f"{i}/{len(user_ids)}")
+            user_id = user_ids[i]
+            for group in self.get_all_groups(user_id):
+                res[group] += 1
+            time.sleep(0.3)
         return res

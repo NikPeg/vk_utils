@@ -1,3 +1,5 @@
+import time
+
 import GroupHandler
 import UserHandler
 import pickle
@@ -23,12 +25,15 @@ else:
     with open('groups.pickle', 'wb') as f:
         pickle.dump(groups, f)
 
-if exists('ok_groups.pickle'):
-    with open('ok_groups.pickle', 'rb') as f:
-        ok_groups = pickle.load(f)
+if exists('stat.pickle'):
+    with open('stat.pickle', 'rb') as f:
+        stat = pickle.load(f)
 else:
-    ok_groups = gh.groups_in_interval(groups, 100, 300)
-    with open('ok _groups.pickle', 'wb') as f:
-        pickle.dump(ok_groups, f)
+    stat = uh.bulk_get_groups_statistics(users)
+    with open('stat.pickle', 'wb') as f:
+        pickle.dump(stat, f)
 
-gh.groups_to_csv(ok_groups)
+lst = [(v, k) for k, v in stat.items() if v > 5]
+for v, k in sorted(lst)[::-1]:
+    print(gh.get_name(k), v, f"https://vk.com/public{k}")
+    time.sleep(0.3)

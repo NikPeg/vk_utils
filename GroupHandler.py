@@ -44,7 +44,7 @@ class GroupHandler:
             group_id = group_ids[i]
             if min_members <= self.get_members_count(group_id) <= max_members:
                 res.append(group_id)
-            time.sleep(0.03)
+            time.sleep(0.3)
         return res
 
     def get_name(self, group_id):
